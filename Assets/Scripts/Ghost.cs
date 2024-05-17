@@ -6,6 +6,10 @@ using UnityEngine.AI;
 
 public class Ghost : MonoBehaviour
 {
+    [SerializeField] private GameObject player;
+    [SerializeField] private float distanceToFollowX;
+    [SerializeField] private float distanceToFollowZ;
+
     private NavMeshAgent agent;
     private int currentGoal;
     
@@ -20,6 +24,8 @@ public class Ghost : MonoBehaviour
     void Update()
     {
         Path();
+        followPlayer();
+        Debug.Log(player.transform.position - this.transform.position);
     }
 
     public void Path()
@@ -33,6 +39,14 @@ public class Ghost : MonoBehaviour
             currentGoal = 0;
         }
         agent.SetDestination(goals[currentGoal].position);
+    }
+
+    public void followPlayer()
+    {
+        if(((this.transform.position - player.transform.position).x <= distanceToFollowX) && ((this.transform.position - player.transform.position).z <= distanceToFollowZ))
+        {
+            agent.SetDestination(player.transform.position);
+        }
     }
 
     public void OnCollisionEnter(Collision collision)
